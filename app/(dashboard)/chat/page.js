@@ -1,11 +1,20 @@
-import React from 'react'
+'use client';
+
 import Chat from '../../components/Chat'
-const Chatpage = () => {
+import { dehydrate, HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+const ChatPage = () => {
+
+    const queryClient = new QueryClient();
     return (
-        <div>
-            <Chat />
-        </div>
+
+
+        <QueryClientProvider client={queryClient}>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <Chat />
+            </HydrationBoundary>
+        </QueryClientProvider>
+
     )
 }
 
-export default Chatpage
+export default ChatPage

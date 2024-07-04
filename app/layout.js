@@ -1,3 +1,5 @@
+
+
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -16,7 +18,12 @@ export default function RootLayout({ children }) {
       <html lang="en" data-theme="winter">
 
 
-        <body className={inter.className}>    {children}
+        <body className={inter.className}>
+
+
+          <>{children}</>
+
+
 
 
         </body>

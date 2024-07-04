@@ -1,17 +1,28 @@
-'use client'
+'use client';
+import { useMutation } from '@tanstack/react-query';
+import {generateChatResponse } from '../../utils/action'
 import { useState } from "react"
+// import { useMutation } from "@tanstack/react-query";
+
 
 
 const Chat = () => {
 
-    const [text,SetText]=useState('')
-    // const [message,SetMessage]=useState('');
+    const [text,SetText]=useState('');
+    const [message,SetMessage]=useState([]);
 
+    const {mutate}=useMutation({
+        mutationFn:(message)=>generateChatResponse(message),
+
+    })
+    // const {mutate}=useMutation({
+    //     mutationFn:(message)=>generateChatResponse(message),
+
+    // });
     const handleClick=(e)=>{
         e.preventDefault();
-        console.log(text)
-
-    }
+        mutate(text)
+    };
   return (
     <div className="min-h-[calc(100vh-6rem)] grid grid-rows[1fr,auto]">
         <div>
