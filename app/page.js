@@ -11,7 +11,7 @@ const HomePage = () => {
           <p className='py-6 text-lg leading-loose'>
             Meta-based chatbot. Accuracy, correctness or appropriateness cannot be guaranteed.
           </p>
-          <Link href='/sign-in' className='btn btn-secondary'>
+          <Link href='/chat' className='btn btn-secondary'>
             Get Started
           </Link>
         </div>
