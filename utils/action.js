@@ -2,7 +2,6 @@
 import { Prisma } from "@prisma/client";
 import OpenAI from "openai"
 import prisma from "./db";
-
 const openai = new OpenAI({
     apiKey: process.env.OPEN_API_KEY,
 });
