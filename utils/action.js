@@ -1,7 +1,9 @@
 'use server'
+// import { Prisma } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import OpenAI from "openai"
 import prisma from "./db";
+import { revalidatePath } from "next/cache";
 const openai = new OpenAI({
     apiKey: process.env.OPEN_API_KEY,
 });
@@ -97,7 +99,7 @@ export const createNewTour = async ({ tour }) => {
 }
 export const getAllTours = async (searchTerm) => {
     if (!searchTerm) {
-        const tours = await prisma.tour.findMany({
+        const tours = await Prisma.tour.findMany({
             orderBy: {
                 city: 'asc',
             },
@@ -106,7 +108,7 @@ export const getAllTours = async (searchTerm) => {
         return tours;
     }
 
-    const tours = await prisma.tour.findMany({
+    const tours = await Prisma.tour.findMany({
         where: {
             OR: [
                 {
@@ -152,8 +154,8 @@ export const generateTourImage = async ({ city, country }) => {
     }
 
 }
-export const fetchUserTokenByID = async (clerkId) => {
-    const result = prisma.token.findUnique({
+export const fetchUserTokensByID = async (clerkId) => {
+    const result = await prisma.token.findUnique({
 
         where: {
             clerkId
@@ -162,11 +164,37 @@ export const fetchUserTokenByID = async (clerkId) => {
     return result?.tokens;
 
 }
-export const generateTokenforId = async () => {
+export const generateUserTokensForId = async (clerkId) => {
     const result = await prisma.token.create({
         data: {
             clerkId,
-        }
-    })
-    return result?.tokens
+        },
+    });
+    return result?.tokens;
+}
+export const fetchOrgenerateUserTokens = async (clerkId) => {
+    const result = await fetchUserTokensByID(clerkId)
+
+    if (result) {
+
+        return result.tokens;
+
+    }
+    return (await generateUserTokensForId(clerkId)).tokens;
+}
+export const SubtractTokens = async (clerkId, tokens) => {
+    const result = await prisma.token.update({
+        where: {
+            clerkId,
+        },
+        data: {
+
+            tokens: {
+                decrement: tokens,
+            },
+        },
+
+    });
+    revalidatePath('/profile')
+    return result.tokens;
 }
